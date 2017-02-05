@@ -34,6 +34,11 @@
         "2016-Datacenter"
       ]
     },
+    "dscResourceURL": {
+      "type": "string",
+      "defaultValue": "https://raw.githubusercontent.com/jamesbannan/storage-iops-latency-throughput-demo/master/dsc/",
+      "minLength": 1
+    },
     "vNetName": {
       "type": "string",
       "defaultValue": "demo-vnet",
@@ -218,7 +223,39 @@
             }
           ]
         }
-      }
+      },
+        "resources": [
+          {
+            "name": "[concat(parameters('vmName'),'/','DSC')]",
+            "type": "extensions",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2016-03-30",
+            "dependsOn": [
+              "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+            ],
+            "tags": {
+              "displayName": "[concat(parameters('vmName'),'/','DSC')]"
+            },
+            "properties": {
+              "publisher": "Microsoft.Powershell",
+              "type": "DSC",
+              "typeHandlerVersion": "2.9",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "configuration": {
+                  "url": "[parameters('dscResourceURL')]",
+                  "script": "vmDemo.ps1",
+                  "function": "vmDemo"
+                },
+                "configurationArguments": {
+                  "nodeName": "[parameters('vmName')]"
+                }
+              },
+              "protectedSettings": {
+              }
+            }
+          }
+        ]
     },
     {
       "name": "[variables('vmPIPName')]",
