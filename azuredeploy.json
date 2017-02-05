@@ -8,7 +8,7 @@
     },
     "storageAccountNamePrefix": {
       "type": "array",
-      "defaultValue": ["premiumstorage","standardstorage"],
+      "defaultValue": [ "premiumstorage", "standardstorage" ],
       "minLength": 1
     },
     "vmName": {
