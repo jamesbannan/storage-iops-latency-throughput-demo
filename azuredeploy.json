@@ -36,7 +36,7 @@
     },
     "dscResourceURL": {
       "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/jamesbannan/storage-iops-latency-throughput-demo/master/dsc/",
+      "defaultValue": "https://raw.githubusercontent.com/jamesbannan/storage-iops-latency-throughput-demo/master/dsc/vmDemo.ps1",
       "minLength": 1
     },
     "vNetName": {
