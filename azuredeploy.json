@@ -4,6 +4,7 @@
   "parameters": {
     "storageAccountType": {
       "type": "string",
+      "defaultValue": "Premium_LRS",
       "allowedValues": [
         "Standard_LRS",
         "Standard_ZRS",
@@ -12,16 +13,19 @@
         "Premium_LRS"
       ]
     },
-    "storageAccountName": {
+    "storageAccountNamePrefix": {
       "type": "string",
+      "defaultValue": "demostorage",
       "minLength": 1
     },
     "vmName": {
       "type": "string",
+      "defaultValue": "demo-01",
       "minLength": 1
     },
     "vmAdminUserName": {
       "type": "string",
+      "defaultValue": "vm-admin",
       "minLength": 1
     },
     "vmAdminPassword": {
@@ -39,6 +43,7 @@
     },
     "vNetName": {
       "type": "string",
+      "defaultValue": "demo-vnet",
       "minLength": 1
     },
     "vmPIPDnsName": {
@@ -48,6 +53,7 @@
 
   },
   "variables": {
+    "storageAccountName": "[concat(parameters('storageAccountNamePrefix'),uniqueString(resourceGroup().id))]",
     "vNetPrefix": "10.0.0.0/16",
     "vNetSubnet1Name": "subnet-01",
     "vNetSubnet1Prefix": "10.0.0.0/24",
@@ -64,13 +70,13 @@
   },
   "resources": [
     {
-      "name": "[parameters('storageAccountName')]",
+      "name": "[variables('storageAccountName')]",
       "type": "Microsoft.Storage/storageAccounts",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "dependsOn": [],
       "tags": {
-        "displayName": "[parameters('storageAccountName')]"
+        "displayName": "[variables('storageAccountName')]"
       },
       "properties": {
         "accountType": "[parameters('storageAccountType')]"
@@ -136,7 +142,7 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
         "[resourceId('Microsoft.Network/networkInterfaces', variables('vmNicName'))]"
       ],
       "tags": {
@@ -161,7 +167,7 @@
           "osDisk": {
             "name": "[variables('vmOSDiskName')]",
             "vhd": {
-              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', variables('vmOSDiskName'), '.vhd')]"
+              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', variables('vmOSDiskName'), '.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -174,7 +180,7 @@
               "caching": "None",
               "createOption": "Empty",
               "vhd": {
-                "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', parameters('vmName'),'-data-','1', '.vhd')]"
+                "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', parameters('vmName'),'-data-','1', '.vhd')]"
               }
             }
           ]
