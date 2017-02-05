@@ -62,7 +62,7 @@
     "vmOSDiskName": "[concat(parameters('vmName'),'-','OSDisk')]",
     "vmSize": "Standard_DS3_v2",
     "vNetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vNetName'))]",
-    "vmSubnetRef": "[concat(variables('vNetID'), '/subnets/', parameters('vNetName'))]",
+    "vmSubnetRef": "[concat(variables('vNetID'), '/subnets/', variables('vNetSubnet1Name'))]",
     "vmContainerName": "vhds",
     "vmNicName": "[concat(parameters('vmName'),'-nic-','0')]",
     "vmPIPName": "[concat(parameters('vmName'),'-PIP')]"
