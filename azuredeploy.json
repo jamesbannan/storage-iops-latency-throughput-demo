@@ -226,7 +226,7 @@
       },
         "resources": [
           {
-            "name": "[concat(parameters('vmName'),'/','DSC')]",
+            "name": "DSC",
             "type": "extensions",
             "location": "[resourceGroup().location]",
             "apiVersion": "2016-03-30",
