@@ -46,7 +46,6 @@
 
   },
   "variables": {
-    "storageAccountName": "[concat(parameters('storageAccountNamePrefix'),uniqueString(resourceGroup().id))]",
     "vNetPrefix": "10.0.0.0/16",
     "vNetSubnet1Name": "subnet-01",
     "vNetSubnet1Prefix": "10.0.0.0/24",
@@ -139,7 +138,7 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+        "storageAccountCopy",
         "[resourceId('Microsoft.Network/networkInterfaces', variables('vmNicName'))]"
       ],
       "tags": {
@@ -164,7 +163,7 @@
           "osDisk": {
             "name": "[variables('vmOSDiskName')]",
             "vhd": {
-              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', variables('vmOSDiskName'), '.vhd')]"
+              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNamePrefix')[1],uniqueString(resourceGroup().id)), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', variables('vmOSDiskName'), '.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
