@@ -201,7 +201,7 @@
             },
             {
               "name": "[concat(parameters('vmName'),'-premiumdata-','1')]",
-              "lun": 2,
+              "lun": 3,
               "diskSizeGB": "1023",
               "caching": "None",
               "createOption": "Empty",
