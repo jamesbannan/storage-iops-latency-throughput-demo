@@ -3,8 +3,8 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "storageAccountType": {
-      "type": "string",
-      "defaultValue": "Premium_LRS",
+      "type": "array",
+      "defaultValue": [ "Premium_LRS", "Standard_LRS" ],
       "allowedValues": [
         "Standard_LRS",
         "Standard_ZRS",
@@ -14,8 +14,8 @@
       ]
     },
     "storageAccountNamePrefix": {
-      "type": "string",
-      "defaultValue": "demostorage",
+      "type": "array",
+      "defaultValue": ["premiumstorage","standardstorage"],
       "minLength": 1
     },
     "vmName": {
@@ -70,16 +70,20 @@
   },
   "resources": [
     {
-      "name": "[variables('storageAccountName')]",
+      "name": "[concat(parameters('storageAccountNamePrefix')[copyIndex()],uniqueString(resourceGroup().id))]",
       "type": "Microsoft.Storage/storageAccounts",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
+      "copy": {
+        "count": "[length(parameters('storageAccountType'))]",
+        "name": "storageAccountCopy"
+      },
       "dependsOn": [],
       "tags": {
-        "displayName": "[variables('storageAccountName')]"
+        "displayName": "[concat(parameters('storageAccountNamePrefix')[copyIndex()],uniqueString(resourceGroup().id))]"
       },
       "properties": {
-        "accountType": "[parameters('storageAccountType')]"
+        "accountType": "[parameters('storageAccountType')[copyIndex()]]"
       }
     },
     {
@@ -174,13 +178,43 @@
           },
           "dataDisks": [
             {
-              "name": "[concat(parameters('vmName'),'-data-','1')]",
+              "name": "[concat(parameters('vmName'),'-standarddata-','1')]",
               "lun": 0,
               "diskSizeGB": "100",
               "caching": "None",
               "createOption": "Empty",
               "vhd": {
-                "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', parameters('vmName'),'-data-','1', '.vhd')]"
+                "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNamePrefix')[1],uniqueString(resourceGroup().id)), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', parameters('vmName'),'-standarddata-','1', '.vhd')]"
+              }
+            },
+            {
+              "name": "[concat(parameters('vmName'),'-standarddata-','2')]",
+              "lun": 1,
+              "diskSizeGB": "100",
+              "caching": "ReadOnly",
+              "createOption": "Empty",
+              "vhd": {
+                "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNamePrefix')[1],uniqueString(resourceGroup().id)), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', parameters('vmName'),'-standarddata-','2', '.vhd')]"
+              }
+            },
+            {
+              "name": "[concat(parameters('vmName'),'-standarddata-','3')]",
+              "lun": 2,
+              "diskSizeGB": "100",
+              "caching": "ReadWrite",
+              "createOption": "Empty",
+              "vhd": {
+                "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNamePrefix')[1],uniqueString(resourceGroup().id)), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', parameters('vmName'),'-standarddata-','3', '.vhd')]"
+              }
+            },
+            {
+              "name": "[concat(parameters('vmName'),'-premiumdata-','1')]",
+              "lun": 2,
+              "diskSizeGB": "1023",
+              "caching": "None",
+              "createOption": "Empty",
+              "vhd": {
+                "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountNamePrefix')[0],uniqueString(resourceGroup().id)), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', parameters('vmName'),'-premiumdata-','1', '.vhd')]"
               }
             }
           ]
