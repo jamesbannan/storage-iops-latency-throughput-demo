@@ -18,3 +18,8 @@ This template creates a single VM running Windows Server 2016 with multiple data
 This template also deploys a Storage Account, Virtual Network and Public IP Address.
 
 The VM is an S-class size which supports Azure Premium Storage disks.
+
+The template also used the PowerShell Desired State Configuration (DSC) VM extension to: 
+* Prepare and format the data disks
+* Install ioMeter using Chocolatey
+* Download and extract 20 pre-defined ioMeter tests to C:\iometerTests
