@@ -76,6 +76,24 @@ Node $NodeName
 				FSLabel = 'SSD'
 				FSFormat = 'NTFS'
 			}
+		File DirectoryCreate
+			{
+				Ensure = "Present"
+				Type = "Directory"
+				DestinationPath = "C:\iometerTests"    
+			}
+		xRemoteFile DownloadTests
+			{
+				DestinationPath = "C:\iometerTests\iometerTests.zip"
+				Uri = "https://github.com/jamesbannan/storage-iops-latency-throughput-demo/raw/master/files/iometerTests.zip"
+				DependsOn = "[File]DirectoryCreate"
+			}
+		xArchive ExpandArchive
+			{
+				Path = "C:\iometerTests\iometerTests.zip"
+				Destination = "C:\iometerTests"
+				DependsOn = "[xRemoteFile]DownloadTests"
+			}
 	}
 
 }
