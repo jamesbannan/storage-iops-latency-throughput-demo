@@ -5,7 +5,7 @@ Param(
 	[string]$NodeName = 'localhost'
 )
 
-Import-DscResource -Name cChoco,xStorage
+Import-DscResource -ModuleName cChoco,xStorage
 
 Node $NodeName 
 	{
@@ -79,3 +79,4 @@ Node $NodeName
 	}
 
 }
+vmDemo
