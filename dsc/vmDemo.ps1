@@ -5,7 +5,7 @@ Param(
 	[string]$NodeName = 'localhost'
 )
 
-Import-DscResource -ModuleName cChoco,xStorage
+Import-DscResource -ModuleName cChoco,xStorage,xPSDesiredStateConfiguration
 
 Node $NodeName 
 	{
