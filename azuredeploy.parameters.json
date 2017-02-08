@@ -8,9 +8,6 @@
     "storageAccountNamePrefix": {
       "value": [ "premium", "standard" ]
     },
-    "vmName": {
-      "value": "demo-01"
-    },
     "vmAdminUserName": {
       "value": ""
     },
