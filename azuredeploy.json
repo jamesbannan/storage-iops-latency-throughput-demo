@@ -27,7 +27,6 @@
     },
     "vmAdminUserName": {
       "type": "string",
-      "defaultValue": "vm-admin",
       "minLength": 1,
       "metadata": {
         "description": "The administrative user on the Windows VM."

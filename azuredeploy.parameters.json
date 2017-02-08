@@ -12,7 +12,7 @@
       "value": "demo-01"
     },
     "vmAdminUserName": {
-      "value": "vm-admin"
+      "value": ""
     },
     "vmAdminPassword": {
       "value": "GEN-PASSWORD"
