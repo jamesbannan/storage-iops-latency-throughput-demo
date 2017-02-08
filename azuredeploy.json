@@ -52,14 +52,6 @@
         "description": "The Windows Server version."
       }
     },
-    "dscResourceURL": {
-      "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/jamesbannan/storage-iops-latency-throughput-demo/master/dsc/vmDemo.zip",
-      "minLength": 1,
-      "metadata": {
-        "description": "The URI of the DSC configuration."
-      }
-    },
     "vNetName": {
       "type": "string",
       "defaultValue": "demo-vnet",
@@ -88,7 +80,8 @@
     "vmSubnetRef": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vNetName'), '/subnets/', variables('vNetSubnet1Name'))]",
     "vmContainerName": "vhds",
     "vmNicName": "[concat(parameters('vmName'),'-nic-','0')]",
-    "vmPIPName": "[concat(parameters('vmName'),'-PIP')]"
+    "vmPIPName": "[concat(parameters('vmName'),'-PIP')]",
+    "dscResourceURL": "https://raw.githubusercontent.com/jamesbannan/storage-iops-latency-throughput-demo/master/dsc/vmDemo.zip"
 
   },
   "resources": [
@@ -269,7 +262,7 @@
               "autoUpgradeMinorVersion": true,
               "settings": {
                 "configuration": {
-                  "url": "[parameters('dscResourceURL')]",
+                  "url": "[variables('dscResourceURL')]",
                   "script": "vmDemo.ps1",
                   "function": "vmDemo"
                 },
