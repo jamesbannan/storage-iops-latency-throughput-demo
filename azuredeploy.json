@@ -2,21 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "storageAccountType": {
-      "type": "array",
-      "defaultValue": [ "Premium_LRS", "Standard_LRS" ],
-      "metadata": {
-        "description": "This is an array of strings which describe the type of each storage account." 
-      }
-    },
-    "storageAccountNamePrefix": {
-      "type": "array",
-      "defaultValue": [ "premium", "standard" ],
-      "minLength": 1,
-      "metadata": {
-        "description": "This is an array of strings which specifies the string prefix used for each storage account name."
-      }
-    },
     "vmAdminUserName": {
       "type": "string",
       "minLength": 1,
@@ -51,6 +36,8 @@
     "vNetPrefix": "10.0.0.0/16",
     "vNetSubnet1Name": "subnet-01",
     "vNetSubnet1Prefix": "10.0.0.0/24",
+    "storageAccountType": [ "Premium_LRS", "Standard_LRS" ],
+    "storageAccountNamePrefix": [ "premium", "standard" ],
     "vmImagePublisher": "MicrosoftWindowsServer",
     "vm1ImageOffer": "WindowsServer",
     "vmOSDiskName": "[concat(variables('vmName'),'-','OSDisk')]",
@@ -66,20 +53,20 @@
   },
   "resources": [
     {
-      "name": "[concat(parameters('storageAccountNamePrefix')[copyIndex()],uniqueString(resourceGroup().id))]",
+      "name": "[concat(variables('storageAccountNamePrefix')[copyIndex()],uniqueString(resourceGroup().id))]",
       "type": "Microsoft.Storage/storageAccounts",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-06-15",
       "copy": {
-        "count": "[length(parameters('storageAccountType'))]",
+        "count": "[length(variables('storageAccountType'))]",
         "name": "storageAccountCopy"
       },
       "dependsOn": [],
       "tags": {
-        "displayName": "[concat(parameters('storageAccountNamePrefix')[copyIndex()],uniqueString(resourceGroup().id))]"
+        "displayName": "[concat(variables('storageAccountNamePrefix')[copyIndex()],uniqueString(resourceGroup().id))]"
       },
       "properties": {
-        "accountType": "[parameters('storageAccountType')[copyIndex()]]"
+        "accountType": "[variables('storageAccountType')[copyIndex()]]"
       }
     },
     {
@@ -167,7 +154,7 @@
           "osDisk": {
             "name": "[variables('vmOSDiskName')]",
             "vhd": {
-              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', concat(parameters('storageAccountNamePrefix')[1],uniqueString(resourceGroup().id))), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', variables('vmOSDiskName'), '.vhd')]"
+              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', concat(variables('storageAccountNamePrefix')[1],uniqueString(resourceGroup().id))), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', variables('vmOSDiskName'), '.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -180,7 +167,7 @@
               "caching": "None",
               "createOption": "Empty",
               "vhd": {
-                "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', concat(parameters('storageAccountNamePrefix')[1],uniqueString(resourceGroup().id))), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', variables('vmName'),'-standarddata-','1', '.vhd')]"
+                "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', concat(variables('storageAccountNamePrefix')[1],uniqueString(resourceGroup().id))), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', variables('vmName'),'-standarddata-','1', '.vhd')]"
               }
             },
             {
@@ -190,7 +177,7 @@
               "caching": "ReadOnly",
               "createOption": "Empty",
               "vhd": {
-                "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', concat(parameters('storageAccountNamePrefix')[1],uniqueString(resourceGroup().id))), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', variables('vmName'),'-standarddata-','2', '.vhd')]"
+                "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', concat(variables('storageAccountNamePrefix')[1],uniqueString(resourceGroup().id))), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', variables('vmName'),'-standarddata-','2', '.vhd')]"
               }
             },
             {
@@ -200,7 +187,7 @@
               "caching": "ReadWrite",
               "createOption": "Empty",
               "vhd": {
-                "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', concat(parameters('storageAccountNamePrefix')[1],uniqueString(resourceGroup().id))), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', variables('vmName'),'-standarddata-','3', '.vhd')]"
+                "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', concat(variables('storageAccountNamePrefix')[1],uniqueString(resourceGroup().id))), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', variables('vmName'),'-standarddata-','3', '.vhd')]"
               }
             },
             {
@@ -210,7 +197,7 @@
               "caching": "None",
               "createOption": "Empty",
               "vhd": {
-                "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', concat(parameters('storageAccountNamePrefix')[0],uniqueString(resourceGroup().id))), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', variables('vmName'),'-premiumdata-','1', '.vhd')]"
+                "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', concat(variables('storageAccountNamePrefix')[0],uniqueString(resourceGroup().id))), '2016-01-01').primaryEndpoints.blob, variables('vmContainerName'), '/', variables('vmName'),'-premiumdata-','1', '.vhd')]"
               }
             }
           ]
