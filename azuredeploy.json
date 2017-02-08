@@ -29,8 +29,21 @@
       "metadata": {
         "description": "The DNS prefix assigned to the public IP address resource."
       }
+    },
+    "_artifactsLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+      },
+      "defaultValue": "https://raw.githubusercontent.com/jamesbannan/storage-iops-latency-throughput-demo/master/"
+    },
+    "_artifactsLocationSasToken": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+      },
+      "defaultValue": ""
     }
-
   },
   "variables": {
     "vNetPrefix": "10.0.0.0/16",
@@ -48,7 +61,8 @@
     "vmContainerName": "vhds",
     "vmNicName": "[concat(variables('vmName'),'-nic-','0')]",
     "vmPIPName": "[concat(variables('vmName'),'-PIP')]",
-    "dscResourceURL": "https://raw.githubusercontent.com/jamesbannan/storage-iops-latency-throughput-demo/master/dsc/vmDemo.zip"
+    "dscResourceFolder": "dsc" ,
+    "dscResourceConfig": "vmDemo"
 
   },
   "resources": [
@@ -229,9 +243,9 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "configuration": {
-                "url": "[variables('dscResourceURL')]",
-                "script": "vmDemo.ps1",
-                "function": "vmDemo"
+                "url": "[concat(parameters('_artifactsLocation'),'/',variables('dscResourceFolder'),'/',variables('dscResourceConfig'),'.zip')]",
+                "script": "[concat(variables('dscResourceConfig'),'.ps1')]",
+                "function": "[variables('dscResourceConfig')]"
               },
               "configurationArguments": {
                 "nodeName": "[variables('vmName')]"
