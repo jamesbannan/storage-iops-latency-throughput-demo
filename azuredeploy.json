@@ -39,19 +39,6 @@
         "description": "The administrative user password."
       }
     },
-    "vmWindowsOSVersion": {
-      "type": "string",
-      "defaultValue": "2016-Datacenter",
-      "allowedValues": [
-        "2008-R2-SP1",
-        "2012-Datacenter",
-        "2012-R2-Datacenter",
-        "2016-Datacenter"
-      ],
-      "metadata": {
-        "description": "The Windows Server version."
-      }
-    },
     "vNetName": {
       "type": "string",
       "defaultValue": "demo-vnet",
@@ -77,6 +64,7 @@
     "vm1ImageOffer": "WindowsServer",
     "vmOSDiskName": "[concat(parameters('vmName'),'-','OSDisk')]",
     "vmSize": "Standard_DS3_v2",
+    "vmWindowsOSVersion": "2016-Datacenter",
     "vmSubnetRef": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vNetName'), '/subnets/', variables('vNetSubnet1Name'))]",
     "vmContainerName": "vhds",
     "vmNicName": "[concat(parameters('vmName'),'-nic-','0')]",
@@ -181,7 +169,7 @@
           "imageReference": {
             "publisher": "[variables('vmImagePublisher')]",
             "offer": "[variables('vm1ImageOffer')]",
-            "sku": "[parameters('vmWindowsOSVersion')]",
+            "sku": "[variables('vmWindowsOSVersion')]",
             "version": "latest"
           },
           "osDisk": {
