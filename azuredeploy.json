@@ -275,5 +275,10 @@
     }
 
   ],
-  "outputs": {}
+  "outputs": {
+    "vmURI": {
+      "type": "string",
+      "value": "[reference(variables('vmPIPName').dnsSettings.fqdn)]"
+    } 
+  }
 }
